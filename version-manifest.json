@@ -1,20 +1,20 @@
 {
   "schemaVersion": 1,
-  "channel": "stable",
+  "channel": "preview",
   "releasedAt": "2026-05-24T00:00:00Z",
   "app": {
     "stable": {
-      "enabled": true,
+      "enabled": false,
       "version": "v0.2.0",
       "downloadURL": "https://github.com/Averionx/HermesManager/releases/download/v0.2.0/HermesManager-macOS.dmg",
       "sha256": "",
       "notes": "Initial public preview build."
     },
     "preview": {
-      "enabled": false,
-      "version": "v0.2.0-preview.1",
-      "downloadURL": "",
-      "sha256": "",
+      "enabled": true,
+      "version": "v0.2.0",
+      "downloadURL": "https://github.com/Averionx/HermesManager/releases/download/v0.2.0/HermesManager-macOS.dmg",
+      "sha256": "3843c108f9c792b2109dcb3cab80558df28f000696c89a8c619301c5fad9f4d6",
       "notes": "Preview channel for testers."
     }
   },
@@ -23,13 +23,13 @@
       "name": "Hermes",
       "version": "v0.14.0",
       "repo": "https://github.com/NousResearch/hermes-agent.git",
-      "ref": "43e566f77eaf01293086eb7cb99a21e240d60634"
+      "ref": "a91a57fa5a13d516c38b07a141a9ce8a3daabeb0"
     },
     "openHuman": {
       "name": "OpenHuman",
       "version": "v0.54.0",
       "repo": "https://github.com/tinyhumansai/openhuman.git",
-      "ref": "48548a223bbf71fded61d43ff1b4de15bc34979b"
+      "ref": "c25fc8e5fd3e7716f416571cd53b34247c94ddbe"
     },
     "hermesWebUI": {
       "package": "hermes-web-ui",
