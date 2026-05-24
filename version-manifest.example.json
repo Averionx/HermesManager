@@ -1,21 +1,21 @@
 {
   "schemaVersion": 1,
   "channel": "stable",
-  "releasedAt": "2026-05-24T00:00:00Z",
+  "releasedAt": "2026-05-23T00:00:00Z",
   "app": {
     "stable": {
       "enabled": true,
       "version": "v0.2.0",
       "downloadURL": "https://github.com/Averionx/HermesManager/releases/download/v0.2.0/HermesManager-macOS.dmg",
       "sha256": "",
-      "notes": "Initial public preview build."
+      "notes": "Stable public build."
     },
     "preview": {
       "enabled": false,
       "version": "v0.2.0-preview.1",
       "downloadURL": "https://github.com/Averionx/HermesManager/releases/download/v0.2.0-preview.1/HermesManager-macOS.dmg",
       "sha256": "",
-      "notes": "Preview channel for testers."
+      "notes": "Preview build for testers."
     }
   },
   "components": {
@@ -37,7 +37,7 @@
     }
   },
   "compatibilityBundle": {
-    "version": "core-2026.05.24",
+    "version": "core-2026.05.23",
     "label": "Hermes v0.14.0 + OpenHuman v0.54.0"
   }
 }
