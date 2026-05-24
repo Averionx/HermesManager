@@ -13,7 +13,7 @@
     "preview": {
       "enabled": false,
       "version": "v0.2.0-preview.1",
-      "downloadURL": "https://github.com/Averionx/HermesManager/releases/download/v0.2.0-preview.1/HermesManager-macOS.dmg",
+      "downloadURL": "",
       "sha256": "",
       "notes": "Preview build for testers."
     }

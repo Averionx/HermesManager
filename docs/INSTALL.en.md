@@ -20,12 +20,12 @@ If macOS blocks the app, see [Troubleshooting](TROUBLESHOOTING.en.md).
 
 ## First Launch: Fresh Install Flow
 
-Hermes Manager automatically detects the local machine state and enables only the matching card. A clean machine enters the fresh install flow: Hermes, OpenHuman, and Hermes Web UI are installed with developer-tested versions and connected automatically.
+Hermes Manager automatically detects the local machine state and enables only the matching setup card. A clean machine enters the fresh install flow: Hermes, OpenHuman, and Hermes Web UI are installed with developer-tested versions and connected automatically.
 
 - Fresh install: Hermes, OpenHuman, and Hermes Web UI are missing.
 - Add OpenHuman: Hermes exists, OpenHuman should be installed, and Hermes long-term memory should be migrated.
 - Repair memory bridge: Hermes and OpenHuman exist but are not connected correctly.
-- Already configured: Hermes brain, OpenHuman memory, and Web UI console are ready.
+- Already configured: Hermes orchestration, OpenHuman memory, and the Web UI console are ready.
 
 ### 1. Choose Fresh Install
 
@@ -37,7 +37,7 @@ Confirm that “Fresh Install” is highlighted, then click “Start One-click I
 
 ### 2. Wait for Install and Bridge Setup
 
-The run page shows logs and progress. This stage installs Hermes, OpenHuman, Hermes Web UI, then writes the Hermes -> OpenHuman memory bridge config.
+The run page shows logs and progress. This stage installs Hermes, OpenHuman, and Hermes Web UI, then writes the Hermes -> OpenHuman memory bridge config.
 
 <p align="center">
   <img src="assets/setup-fresh-running-en.png" alt="Install progress screen" width="900">
@@ -53,7 +53,7 @@ After setup, enter an OpenAI-compatible API base URL, API key, and model name if
 
 ### 4. Enter the Completion Page
 
-The completion page shows the Web UI URL, login token, and model status. The token should stay hidden by default until the user chooses to copy it.
+The completion page shows the Web UI URL, login token, and model status. The token stays hidden by default until the user chooses to reveal or copy it.
 
 <p align="center">
   <img src="assets/setup-fresh-summary-en.png" alt="Setup completion page" width="900">
@@ -83,4 +83,4 @@ After setup:
 
 ## Update Policy
 
-Hermes Manager installs developer-tested component versions by default instead of blindly tracking the newest upstream release. Use the Settings Update Center when you want to update.
+Hermes Manager installs developer-tested component versions by default instead of tracking the newest upstream release directly. Use the Settings Update Center when you want to update.

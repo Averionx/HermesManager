@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <strong>A macOS control console for installing, connecting, and operating Hermes + OpenHuman + Hermes Web UI.</strong>
+  <strong>A macOS control console for installing, connecting, and managing Hermes + OpenHuman + Hermes Web UI.</strong>
 </p>
 
 <p align="center">
@@ -20,19 +20,19 @@
 
 ## What is Hermes Manager?
 
-Hermes Manager is a macOS installer and operator console for a local Hermes + OpenHuman stack. It installs Hermes, installs OpenHuman, configures OpenHuman as Hermes' long-term memory backend, then starts Hermes Web UI and an embedded Hermes CLI.
+Hermes Manager is a macOS installer and control console for a local Hermes + OpenHuman stack. It installs Hermes, installs OpenHuman, configures the long-term memory bridge, then starts Hermes Web UI and an embedded Hermes CLI.
 
-The product idea is simple: Hermes stays the brain, OpenHuman owns long-term memory, and Hermes Web UI provides the browser control surface.
+The product idea is simple: Hermes handles agent orchestration and tool execution, OpenHuman owns long-term memory, and Hermes Web UI provides the browser control surface.
 
 ## Why Hermes + OpenHuman?
 
-Hermes is strong as the agent brain: conversations, tool execution, CLI workflows, model runtime, and task control live there. OpenHuman is strong as a long-term memory layer: local-first memory workspace, structured memory storage, and durable recall.
+Hermes is strong at agent orchestration: conversations, tool execution, CLI workflows, model runtime, and task control live there. OpenHuman is strong as a long-term memory layer, with a local-first workspace, structured memory storage, and durable recall.
 
 Hermes Manager combines them:
 
-- Hermes keeps the operator, tooling, and CLI experience.
+- Hermes keeps orchestration, tool execution, and the CLI experience.
 - OpenHuman handles long-term memory reads and writes.
-- Hermes native long-term memory writes are disabled to avoid split-brain memory.
+- Hermes native long-term memory writes are disabled to avoid splitting memory across backends.
 - Hermes Web UI becomes the browser console for access, token login, and service control.
 - Migration only moves Hermes long-term memory; short-term logs stay local.
 
@@ -46,18 +46,18 @@ Hermes Manager combines them:
 - Automatic local state detection with four flows: fresh install, OpenHuman add-on, memory bridge repair, and already configured.
 - Automatic Hermes -> OpenHuman memory bridge configuration.
 - Migration of existing Hermes long-term memory into OpenHuman without overwriting existing OpenHuman data.
-- Detection for disabled Hermes native long-term memory.
+- Detection that Hermes native long-term memory writes are disabled.
 - Web UI URL and login token detection, with token hidden by default.
 - Embedded Hermes CLI inside the app.
 - Dashboard controls for starting, stopping, and restarting Web UI and Gateway.
 - Chinese / English UI switching.
-- Developer-controlled remote version manifest to avoid unsafe "latest" updates.
+- Developer-maintained remote version manifest to avoid unsafe "latest" updates.
 
 ## Screenshots
 
 ### Setup Wizard
 
-The setup wizard detects the local machine state and enables only the matching install or repair flow.
+The setup wizard detects the local machine state and exposes only the matching install or repair flow.
 
 <p align="center">
   <img src="docs/assets/setup-fresh-choose-en.png" alt="Hermes Manager setup wizard" width="900">
@@ -65,7 +65,7 @@ The setup wizard detects the local machine state and enables only the matching i
 
 ### Dashboard
 
-The dashboard brings service status, Web UI access, login token controls, model status, and install/repair entry points into one console.
+The dashboard brings service status, Web UI access, login token controls, model status, and install/repair entry points into one place.
 
 <p align="center">
   <img src="docs/assets/setup-fresh-dashboard-en.png" alt="Hermes Manager dashboard" width="900">
@@ -90,7 +90,7 @@ If macOS says the app is damaged or cannot be opened, see [Troubleshooting](docs
 
 ## Current Status
 
-Hermes Manager is currently a macOS preview build. It prefers a developer-tested Hermes / OpenHuman / Hermes Web UI combination instead of blindly installing the newest upstream release. Later updates are checked inside the app through the Update Center.
+Hermes Manager is currently a macOS preview build. It prefers a developer-tested Hermes / OpenHuman / Hermes Web UI combination instead of installing the newest upstream release directly. Later updates are checked inside the app through the Update Center.
 
 ## Privacy and Safety
 
@@ -103,7 +103,7 @@ Hermes Manager is currently a macOS preview build. It prefers a developer-tested
 
 Hermes Manager is an integration project built on top of:
 
-- [Hermes Agent](https://github.com/NousResearch/hermes-agent) - agent brain, CLI, and tool runtime.
+- [Hermes Agent](https://github.com/NousResearch/hermes-agent) - agent orchestration, CLI, and tool runtime.
 - [OpenHuman](https://github.com/tinyhumansai/openhuman) - long-term memory, user modeling, and local memory workspace.
 - [Hermes Web UI](https://www.npmjs.com/package/hermes-web-ui) - browser control console and login surface.
 

@@ -4,7 +4,7 @@
 
 ## macOS says the app is damaged or cannot be opened
 
-Because Hermes Manager is not currently distributed through the App Store, macOS may add a quarantine flag to the app.
+Because Hermes Manager is not currently distributed through the App Store, macOS may add a quarantine flag to the non-notarized app.
 
 Option 1: command-line fix (recommended)
 
@@ -22,7 +22,7 @@ Open "System Settings" -> "Privacy & Security", then click "Open Anyway" in the 
 
 ## The app still shows an old UI
 
-Make sure `/Applications/HermesManager.app` is the newest build. You can remove the old app and drag a fresh copy from the DMG.
+Make sure `/Applications/HermesManager.app` is the newest build. You can remove the old app, then drag a fresh copy from the DMG.
 
 ```bash
 rm -rf "/Applications/HermesManager.app"
@@ -47,7 +47,7 @@ Click "Start All" or "Restart All" in the dashboard. If the port is occupied, st
 
 ## Login token is missing
 
-Hermes Manager detects several common token locations. Tokens are hidden by default; click the eye button to reveal and the copy button to copy.
+Hermes Manager checks several common token locations. Tokens are hidden by default; click the eye button to reveal and the copy button to copy.
 
 ## Memory bridge needs repair
 

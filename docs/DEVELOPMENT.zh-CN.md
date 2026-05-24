@@ -17,10 +17,16 @@ swift build
 .build/debug/HermesManager
 ```
 
-安全预览模式不会执行安装、迁移、清除或启动命令，适合调试界面：
+UI 原型模式不会执行真实安装、迁移、清除或启动命令，适合界面开发：
 
 ```bash
-HERMES_MANAGER_SAFE_PREVIEW=1 .build/debug/HermesManager
+HERMES_MANAGER_UI_PROTOTYPE=1 .build/debug/HermesManager
+```
+
+演示执行会读取本机真实状态，但安装、清除、重装、启动、更新和写配置都只输出模拟日志：
+
+```bash
+HERMES_MANAGER_DEMO_MODE=1 .build/debug/HermesManager
 ```
 
 ## 自测
@@ -70,7 +76,7 @@ dist/HermesManager-macOS.dmg
 
 ## 设计原则
 
-- Hermes 是主控大脑。
+- Hermes 负责 Agent 主控与工具执行。
 - OpenHuman 是长期记忆后端。
 - Hermes Web UI 是控制平台。
 - 长期记忆必须统一进入 OpenHuman。

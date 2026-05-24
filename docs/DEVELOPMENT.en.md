@@ -17,10 +17,16 @@ swift build
 .build/debug/HermesManager
 ```
 
-Safe preview mode does not execute install, migration, deletion, or launch commands. Use it for UI work:
+UI prototype mode does not execute real install, migration, deletion, or launch commands. Use it for interface development:
 
 ```bash
-HERMES_MANAGER_SAFE_PREVIEW=1 .build/debug/HermesManager
+HERMES_MANAGER_UI_PROTOTYPE=1 .build/debug/HermesManager
+```
+
+Demo run mode reads real local state, but install, clear, reinstall, launch, update, and config-write actions only produce simulated logs:
+
+```bash
+HERMES_MANAGER_DEMO_MODE=1 .build/debug/HermesManager
 ```
 
 ## Self Test
@@ -70,7 +76,7 @@ dist/HermesManager-macOS.dmg
 
 ## Design Principles
 
-- Hermes is the operator brain.
+- Hermes handles agent orchestration and tool execution.
 - OpenHuman is the long-term memory backend.
 - Hermes Web UI is the control surface.
 - Long-term memory must be unified into OpenHuman.

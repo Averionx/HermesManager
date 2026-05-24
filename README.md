@@ -20,20 +20,20 @@
 
 ## Hermes Manager 是什么？
 
-Hermes Manager 是一个面向普通 macOS 用户的安装器与控制台。它把三件事做成一个可视化流程：安装 Hermes，安装 OpenHuman，把 OpenHuman 配置为 Hermes 的长期记忆库，再启动 Hermes Web UI 和内置 Hermes CLI。
+Hermes Manager 是一个面向 macOS 用户的安装器与控制台。它把安装 Hermes、安装 OpenHuman、配置长期记忆连接、启动 Hermes Web UI 与内置 Hermes CLI 做成一个可视化流程。
 
-目标很简单：让 Hermes 专注做主控大脑，让 OpenHuman 专注做长期记忆，让 Hermes Web UI 提供浏览器控制台。
+目标很简单：Hermes 负责 Agent 主控与工具执行，OpenHuman 负责长期记忆，Hermes Web UI 提供浏览器控制台。
 
 ## 为什么是 Hermes + OpenHuman？
 
-Hermes 擅长作为 agent 主控：对话、工具调用、CLI 工作流、模型运行和任务执行都由它负责。OpenHuman 擅长长期记忆：它提供本地优先的记忆工作区、结构化记忆存储和可持续召回能力。
+Hermes 擅长 Agent 主控：对话、工具调用、CLI 工作流、模型运行和任务执行都由它负责。OpenHuman 擅长长期记忆：它提供本地优先的记忆工作区、结构化记忆存储和持续召回能力。
 
 Hermes Manager 把两者接在一起：
 
-- Hermes 保留主控、工具和 CLI 体验。
+- Hermes 保留主控、工具调用和 CLI 体验。
 - OpenHuman 接管长期记忆读写。
 - Hermes 原生长期记忆写入会被关闭，避免同一份长期记忆分散到多个库。
-- Hermes Web UI 作为控制平台，负责浏览器访问、token 登录和服务入口。
+- Hermes Web UI 作为控制平台，负责浏览器访问、登录 Token 和服务入口。
 - 迁移时只迁移 Hermes 长期记忆，短期会话日志保留在本地。
 
 <p align="center">
@@ -47,17 +47,17 @@ Hermes Manager 把两者接在一起：
 - 自动配置 Hermes 使用 OpenHuman 作为长期记忆库。
 - 迁移 Hermes 现有长期记忆到 OpenHuman，且不覆盖 OpenHuman 已有数据。
 - 检测 Hermes 自带长期记忆是否已关闭。
-- 检测 Web UI 地址和登录 token，默认隐藏敏感 token。
+- 检测 Web UI 地址和登录 Token，默认隐藏敏感内容。
 - 内置 Hermes CLI，不需要另开终端。
 - 控制台可启动、停止、重启 Web UI 与 Gateway。
 - 中英文界面切换。
-- 开发者控制的远程版本清单，避免用户自动追最新版导致兼容问题。
+- 使用开发者维护的远程版本清单，避免自动安装未经验证的上游最新版。
 
 ## 截图
 
 ### 安装向导
 
-安装向导会自动检测本机状态，并只允许点击当前匹配的安装或修复流程。
+安装向导会自动检测本机状态，并只开放当前匹配的安装或修复流程。
 
 <p align="center">
   <img src="docs/assets/setup-fresh-choose-zh.png" alt="Hermes Manager 安装向导" width="900">
@@ -65,7 +65,7 @@ Hermes Manager 把两者接在一起：
 
 ### 控制面板
 
-控制面板集中管理服务状态、Web UI 入口、登录 Token、模型状态和安装/修复入口。
+控制面板集中管理服务状态、Web UI 入口、登录 Token、模型状态以及安装/修复入口。
 
 <p align="center">
   <img src="docs/assets/setup-fresh-dashboard-zh.png" alt="Hermes Manager 控制面板" width="900">
@@ -90,12 +90,12 @@ Hermes Manager 把两者接在一起：
 
 ## 当前状态
 
-Hermes Manager 当前是 macOS 预览版。它优先安装开发者验证过的 Hermes / OpenHuman / Hermes Web UI 组合，而不是盲目安装上游最新版。后续可在 App 内更新中心检查开发者确认过的新版本。
+Hermes Manager 当前是 macOS 预览版。它优先安装开发者验证过的 Hermes / OpenHuman / Hermes Web UI 组合，而不是直接安装上游最新版。后续可在 App 内的更新中心检查开发者确认过的新版本。
 
 ## 隐私与安全
 
-- Hermes Manager 默认使用本机路径，不上传你的记忆、token 或模型配置。
-- 公开版不会包含作者本机记忆、API Key、GitHub token 或私有配置。
+- Hermes Manager 默认使用本机路径，不上传你的记忆、Token 或模型配置。
+- 公开版不会包含作者本机记忆、API Key、GitHub Token 或私有配置。
 - 安装日志会避免打印 API Key、Token 和记忆正文。
 - 更新清单只能选择版本、下载链接和组件 ref；不会从远程执行任意命令。
 

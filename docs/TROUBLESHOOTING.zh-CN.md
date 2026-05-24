@@ -4,7 +4,7 @@
 
 ## macOS 提示“应用已损坏，无法打开”？
 
-由于 Hermes Manager 目前不是 App Store 分发，macOS 可能会给非公证应用加上隔离标记。
+由于 Hermes Manager 目前不是 App Store 分发，macOS 可能会给未公证应用加上隔离标记。
 
 方案 1：命令行修复（推荐）
 
@@ -22,7 +22,7 @@ sudo xattr -rd com.apple.quarantine "/Applications/HermesManager.app"
 
 ## 打开后还是旧界面？
 
-请确认 `/Applications/HermesManager.app` 是最新版本。可以删除旧 App 后重新从 DMG 拖入 `/Applications`。
+请确认 `/Applications/HermesManager.app` 是最新版本。可以删除旧 App，再从 DMG 重新拖入 `/Applications`。
 
 ```bash
 rm -rf "/Applications/HermesManager.app"
@@ -47,7 +47,7 @@ rm -rf "/Applications/HermesManager.app"
 
 ## 登录 Token 没显示？
 
-Hermes Manager 会自动检测多个常见 token 路径。Token 默认隐藏，点击眼睛按钮显示，点击复制按钮复制。
+Hermes Manager 会自动检测多个常见 Token 路径。Token 默认隐藏，点击眼睛按钮显示，点击复制按钮复制。
 
 ## 记忆连接显示需要修复？
 
