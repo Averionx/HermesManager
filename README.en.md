@@ -55,16 +55,20 @@ Hermes Manager combines them:
 
 ## Screenshots
 
-### Fresh Install Flow
+### Setup Wizard
+
+The setup wizard detects the local machine state and enables only the matching install or repair flow.
 
 <p align="center">
-  <img src="docs/assets/setup-fresh-choose-en.png" alt="Hermes Manager fresh install screen" width="900">
+  <img src="docs/assets/setup-fresh-choose-en.png" alt="Hermes Manager setup wizard" width="900">
 </p>
 
-### Install and Configure
+### Dashboard
+
+The dashboard brings service status, Web UI access, login token controls, model status, and install/repair entry points into one console.
 
 <p align="center">
-  <img src="docs/assets/setup-fresh-running-en.png" alt="Hermes Manager install progress screen" width="900">
+  <img src="docs/assets/setup-fresh-dashboard-en.png" alt="Hermes Manager dashboard" width="900">
 </p>
 
 ## Quick Start

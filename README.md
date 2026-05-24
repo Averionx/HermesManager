@@ -55,16 +55,20 @@ Hermes Manager 把两者接在一起：
 
 ## 截图
 
-### 全新安装流程
+### 安装向导
+
+安装向导会自动检测本机状态，并只允许点击当前匹配的安装或修复流程。
 
 <p align="center">
-  <img src="docs/assets/setup-fresh-choose-zh.png" alt="Hermes Manager 全新安装界面" width="900">
+  <img src="docs/assets/setup-fresh-choose-zh.png" alt="Hermes Manager 安装向导" width="900">
 </p>
 
-### 安装与配置
+### 控制面板
+
+控制面板集中管理服务状态、Web UI 入口、登录 Token、模型状态和安装/修复入口。
 
 <p align="center">
-  <img src="docs/assets/setup-fresh-running-zh.png" alt="Hermes Manager 安装执行页面" width="900">
+  <img src="docs/assets/setup-fresh-dashboard-zh.png" alt="Hermes Manager 控制面板" width="900">
 </p>
 
 ## 快速开始
