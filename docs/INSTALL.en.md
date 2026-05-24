@@ -59,6 +59,14 @@ The completion page shows the Web UI URL, login token, and model status. The tok
   <img src="assets/setup-fresh-summary-en.png" alt="Setup completion page" width="900">
 </p>
 
+### 5. Enter the Dashboard
+
+Click “Enter Dashboard” to open the Hermes Manager console with service status, Web UI access, token controls, and the install/repair entry point.
+
+<p align="center">
+  <img src="assets/setup-fresh-dashboard-en.png" alt="Dashboard screen" width="900">
+</p>
+
 ## Memory Strategy
 
 Hermes Manager migrates Hermes long-term memory only. Short-term conversations, logs, caches, and temporary state remain local.
