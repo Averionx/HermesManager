@@ -182,12 +182,12 @@ final class SetupExecutionService {
         }
 
         if AppRuntimeMode.uiPrototype {
-            emit("UI 模式", "[UI] SetupExecutionService 已进入硬保护：真实安装、清除、迁移、配置、启动全部跳过。")
+            emit("安全预览", "[SAFE] SetupExecutionService 已进入硬保护：安装、清除、迁移、配置、启动全部跳过。")
             for step in steps {
                 completed += 1
-                emit(step.title, "[UI STEP] 已模拟：\(step.title)")
+                emit(step.title, "[SAFE STEP] 已预览：\(step.title)")
             }
-            emit("完成", "[UI DONE] UI Prototype 模式执行完成，未触碰 Hermes/OpenHuman/Web UI。")
+            emit("完成", "[SAFE DONE] 安全预览执行完成，未触碰 Hermes/OpenHuman/Web UI。")
             return .success(())
         }
 
@@ -258,7 +258,7 @@ final class SetupExecutionService {
         }
 
         if AppRuntimeMode.uiPrototype {
-            onLog("[UI] 已模拟同步 Provider：\(providerKey) / \(defaultModel)；未写入 ~/.hermes、Hermes Web UI 或环境变量。")
+            onLog("[SAFE] 已预览同步 Provider：\(providerKey) / \(defaultModel)；未写入 ~/.hermes、Hermes Web UI 或环境变量。")
             return .success(())
         }
 
@@ -542,7 +542,7 @@ final class SetupExecutionService {
 
     func updateCompatibilityBundle(manifest: RemoteVersionManifest, onLog: @escaping (String) -> Void) -> Result<Void, Error> {
         guard !AppRuntimeMode.uiPrototype else {
-            onLog("[UI] 已模拟更新 Hermes + OpenHuman 核心组件；没有执行真实安装。")
+            onLog("[SAFE] 已预览更新 Hermes + OpenHuman 核心组件；没有执行本机安装。")
             return .success(())
         }
 

@@ -53,6 +53,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         showMainWindow()
+        exportDocumentationScreenshotIfNeeded()
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
@@ -82,6 +83,47 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         mainWindowController?.window?.orderFrontRegardless()
         NSRunningApplication.current.activate(options: [.activateAllWindows])
         NSApp.activate(ignoringOtherApps: true)
+    }
+
+    private func exportDocumentationScreenshotIfNeeded() {
+        guard AppRuntimeMode.documentationScreenshot,
+              let path = ProcessInfo.processInfo.environment["HERMES_MANAGER_DOC_EXPORT_PATH"],
+              !path.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.35) { [weak self] in
+            guard let window = self?.mainWindowController?.window,
+                  let contentView = window.contentView else {
+                NSApp.terminate(nil)
+                return
+            }
+
+            let bounds = contentView.bounds
+            guard bounds.width > 0, bounds.height > 0,
+                  let representation = contentView.bitmapImageRepForCachingDisplay(in: bounds) else {
+                NSApp.terminate(nil)
+                return
+            }
+
+            representation.size = bounds.size
+            contentView.cacheDisplay(in: bounds, to: representation)
+
+            if let data = representation.representation(using: .png, properties: [:]) {
+                do {
+                    let url = URL(fileURLWithPath: path)
+                    try FileManager.default.createDirectory(
+                        at: url.deletingLastPathComponent(),
+                        withIntermediateDirectories: true
+                    )
+                    try data.write(to: url)
+                } catch {
+                    fputs("Failed to write documentation screenshot: \(error.localizedDescription)\n", stderr)
+                }
+            }
+
+            NSApp.terminate(nil)
+        }
     }
 }
 

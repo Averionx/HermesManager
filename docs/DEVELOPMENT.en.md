@@ -17,10 +17,10 @@ swift build
 .build/debug/HermesManager
 ```
 
-UI prototype mode does not execute real install, migration, deletion, or launch commands. Use it for UI work:
+Safe preview mode does not execute install, migration, deletion, or launch commands. Use it for UI work:
 
 ```bash
-HERMES_MANAGER_UI_PROTOTYPE=1 .build/debug/HermesManager
+HERMES_MANAGER_SAFE_PREVIEW=1 .build/debug/HermesManager
 ```
 
 ## Self Test

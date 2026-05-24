@@ -17,10 +17,10 @@ swift build
 .build/debug/HermesManager
 ```
 
-UI 原型模式不会执行真实安装、迁移、清除或启动命令，适合调 UI：
+安全预览模式不会执行安装、迁移、清除或启动命令，适合调试界面：
 
 ```bash
-HERMES_MANAGER_UI_PROTOTYPE=1 .build/debug/HermesManager
+HERMES_MANAGER_SAFE_PREVIEW=1 .build/debug/HermesManager
 ```
 
 ## 自测

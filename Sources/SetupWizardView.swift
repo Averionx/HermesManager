@@ -280,6 +280,7 @@ struct SetupWizardView: View {
     @State private var runSucceeded = false
     @State private var apiSaveInProgress = false
     @State private var showClearConfirmation = false
+    @State private var documentationRunPrepared = false
 
     private var unlockAllCardsForTesting: Bool {
         AppRuntimeMode.uiPrototype
@@ -456,6 +457,29 @@ struct SetupWizardView: View {
     }
 
     private func startDetection() {
+        if AppRuntimeMode.documentationScreenshot {
+            let detected = SetupDetectionSnapshot(
+                hermesInstalled: false,
+                openHumanInstalled: false,
+                webUIInstalled: false,
+                memoryLinked: false,
+                memoryMigrated: false,
+                memoryIssues: [],
+                memoryWarnings: [],
+                openHumanDocumentCount: 0,
+                legacyHermesMemoryCount: 0,
+                tokenPath: "~/.hermes-web-ui/.token",
+                vaultPath: "~/.openhuman/vault"
+            )
+            snapshot = detected
+            selectedScenario = .freshInstall
+            migrateMemorySelected = false
+            withAnimation(.spring(response: 0.35, dampingFraction: 0.86)) {
+                stage = documentationInitialStage()
+            }
+            prepareDocumentationStageIfNeeded()
+            return
+        }
         stage = .detecting
         currentStep = L10n.t("扫描本机 Hermes/OpenHuman/Web UI 状态", "Scanning local Hermes/OpenHuman/Web UI status")
         SetupEnvironmentDetector.detect { detected in
@@ -470,6 +494,13 @@ struct SetupWizardView: View {
     }
 
     private func handlePrimaryAction() {
+        if AppRuntimeMode.documentationScreenshot {
+            prepareDocumentationRun()
+            withAnimation(.spring(response: 0.35, dampingFraction: 0.86)) {
+                stage = .running
+            }
+            return
+        }
         if AppRuntimeMode.uiPrototype {
             beginSetupRun()
             return
@@ -567,8 +598,8 @@ struct SetupWizardView: View {
             clearOpenHuman: clearOpenHumanSelected
         )
         installLogs = [
-            L10n.t("[UI] 当前为 UI Prototype 模式，本次执行只模拟界面流程。", "[UI] UI Prototype mode: this run only simulates the interface flow."),
-            L10n.t("[UI] 不会安装、重装、清除、迁移、启动 Hermes/Web UI，也不会写入 Hermes/OpenHuman 文件或数据库。", "[UI] No install, reinstall, clear, migration, service start, or Hermes/OpenHuman file/database writes will occur."),
+            L10n.t("[SAFE] 当前为安全预览，本次执行只展示界面流程。", "[SAFE] Safe preview is active; this run only previews the setup flow."),
+            L10n.t("[SAFE] 不会安装、重装、清除、迁移、启动 Hermes/Web UI，也不会写入 Hermes/OpenHuman 文件或数据库。", "[SAFE] No install, reinstall, clear, migration, service start, or Hermes/OpenHuman file/database writes will occur."),
         ]
 
         let total = max(steps.count, 1)
@@ -576,8 +607,8 @@ struct SetupWizardView: View {
             DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.20) {
                 currentStep = step
                 progress = Double(index + 1) / Double(total)
-                installLogs.append("[UI STEP] \(step)")
-                installLogs.append(L10n.t("[UI OK] 已模拟完成：\(step)", "[UI OK] Simulated complete: \(step)"))
+                installLogs.append("[SAFE STEP] \(step)")
+                installLogs.append(L10n.t("[SAFE OK] 已预览完成：\(step)", "[SAFE OK] Preview complete: \(step)"))
             }
         }
 
@@ -585,8 +616,8 @@ struct SetupWizardView: View {
             runSucceeded = true
             runFinished = true
             progress = 1
-            currentStep = L10n.t("UI 模拟执行完成", "UI simulation complete")
-            installLogs.append(L10n.t("[UI DONE] 四个安装状态选项均可安全测试，未执行真实系统命令。", "[UI DONE] All four setup state options are safe to test; no real system command was executed."))
+            currentStep = L10n.t("安全预览完成", "Safe preview complete")
+            installLogs.append(L10n.t("[SAFE DONE] 四个安装状态选项均可安全测试，未执行本机系统命令。", "[SAFE DONE] All four setup state options are safe to test; no local system command was executed."))
         }
     }
 
@@ -602,8 +633,8 @@ struct SetupWizardView: View {
         if AppRuntimeMode.uiPrototype {
             configuredModelName = trimmedModelName
             configuredAPIBaseURL = trimmedBaseURL
-            installLogs.append(L10n.t("[UI] 已模拟保存 API 配置；未写入 ~/.hermes 或 Hermes Web UI 配置。", "[UI] Simulated saving API config; did not write ~/.hermes or Hermes Web UI config."))
-            manager.showToast(title: L10n.t("UI 模式", "UI Mode"), message: L10n.t("已模拟保存模型配置，没有写入真实配置文件", "Simulated saving model config; no real config file was written"), icon: "paintbrush.fill", accent: SetupPalette.cyan)
+            installLogs.append(L10n.t("[SAFE] 已预览保存 API 配置；未写入 ~/.hermes 或 Hermes Web UI 配置。", "[SAFE] Previewed saving API config; did not write ~/.hermes or Hermes Web UI config."))
+            manager.showToast(title: L10n.t("安全预览", "Safe Preview"), message: L10n.t("已预览保存模型配置，没有写入本机配置文件", "Previewed saving model config; no local config file was written"), icon: "paintbrush.fill", accent: SetupPalette.cyan)
             withAnimation(.spring(response: 0.35, dampingFraction: 0.86)) {
                 stage = .summary
             }
@@ -648,6 +679,61 @@ struct SetupWizardView: View {
         manager.readToken()
         manager.refreshModelStatus()
         manager.checkStatus(force: true)
+    }
+
+    private func documentationInitialStage() -> SetupWizardStage {
+        let value = ProcessInfo.processInfo.environment["HERMES_MANAGER_DOC_SCREENSHOT_STAGE"]?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased()
+        switch value {
+        case "running":
+            return .running
+        case "api":
+            return .api
+        case "summary", "complete", "completion":
+            return .summary
+        default:
+            return .overview
+        }
+    }
+
+    private func prepareDocumentationStageIfNeeded() {
+        switch documentationInitialStage() {
+        case .running:
+            prepareDocumentationRun()
+        case .api:
+            apiBaseURL = "https://api.example.com/v1"
+            modelName = "gpt-4.1"
+        case .summary:
+            runFinished = true
+            runSucceeded = true
+            progress = 1
+            currentStep = L10n.t("执行完成", "Run complete")
+            apiBaseURL = ""
+            modelName = ""
+        case .detecting, .overview:
+            break
+        }
+    }
+
+    private func prepareDocumentationRun() {
+        guard !documentationRunPrepared else { return }
+        documentationRunPrepared = true
+        selectedScenario = .freshInstall
+        progress = 0.74
+        runFinished = false
+        runSucceeded = false
+        currentStep = L10n.t("写入 Hermes -> OpenHuman 记忆连接配置", "Writing Hermes -> OpenHuman memory bridge config")
+        installLogs = [
+            "[INFO] 版本清单来源：内置离线清单",
+            "[INFO] 目标版本：Hermes v0.14.0，OpenHuman v0.54.0，Hermes Web UI v0.5.28",
+            "[OK] macOS 环境和 Homebrew/PATH 可用性检查完成",
+            "[OK] Hermes 主控安装完成",
+            "[OK] OpenHuman Vault 已初始化",
+            "[OK] Hermes Web UI 已安装",
+            "[STEP] 写入 Hermes -> OpenHuman 记忆连接配置",
+            "[OK] 已关闭 Hermes 自带长期记忆写入"
+        ]
     }
 }
 
@@ -2045,7 +2131,7 @@ struct APIConfigurationView: View {
 
     private func fetchModels() {
         modelFetchInProgress = true
-        modelFetchMessage = AppRuntimeMode.uiPrototype ? L10n.t("UI 模式：正在模拟模型列表...", "UI mode: simulating model list...") : L10n.t("正在请求 /models...", "Requesting /models...")
+        modelFetchMessage = AppRuntimeMode.uiPrototype ? L10n.t("安全预览：正在读取模型列表...", "Safe preview: loading model list...") : L10n.t("正在请求 /models...", "Requesting /models...")
         discoveredModels = []
 
         ModelCatalogService.fetchOpenAICompatibleModels(baseURL: baseURL, apiKey: apiKey) { result in
@@ -2256,15 +2342,6 @@ struct SetupCompletionView: View {
 
             Spacer()
 
-            if AppRuntimeMode.uiPrototype {
-                Text(L10n.t("UI 原型模式", "UI Prototype"))
-                    .font(.system(size: 11, weight: .bold))
-                    .foregroundColor(SetupPalette.emerald)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 7)
-                    .background(SetupPalette.emerald.opacity(0.10))
-                    .cornerRadius(DesignTokens.radiusPill)
-            }
         }
     }
 

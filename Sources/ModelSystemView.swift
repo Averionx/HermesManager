@@ -213,12 +213,10 @@ struct ModelSystemView: View {
             HStack(spacing: 10) {
                 routeButtons
                 Spacer(minLength: 12)
-                mockBadge
             }
 
             VStack(alignment: .leading, spacing: 10) {
                 routeButtons
-                mockBadge
             }
         }
     }
@@ -229,16 +227,6 @@ struct ModelSystemView: View {
                 routeButton(item)
             }
         }
-    }
-
-    private var mockBadge: some View {
-        Text(AppRuntimeMode.uiPrototype ? "UI Prototype" : "Live Config")
-            .font(.system(size: 10, weight: .bold, design: .monospaced))
-            .foregroundColor(AppRuntimeMode.uiPrototype ? SetupPalette.cyan : SetupPalette.emerald)
-            .padding(.horizontal, 10)
-            .frame(height: 28)
-            .background((AppRuntimeMode.uiPrototype ? SetupPalette.cyan : SetupPalette.emerald).opacity(0.10))
-            .cornerRadius(DesignTokens.radiusPill)
     }
 
     private func routeButton(_ item: ModelSystemRoute) -> some View {
@@ -300,7 +288,7 @@ struct ModelSystemView: View {
                 snapshot.models[index].isCurrent = snapshot.models[index].id == model.id
             }
             selectedModelID = model.id
-            manager.showToast(title: "已模拟切换模型", message: "UI 模式不会写入 Hermes/Web UI", icon: "paintbrush.fill", accent: SetupPalette.cyan)
+            manager.showToast(title: "已预览切换模型", message: "安全预览不会写入 Hermes/Web UI 本机配置", icon: "paintbrush.fill", accent: SetupPalette.cyan)
             route = .overview
             return
         }
@@ -321,7 +309,7 @@ struct ModelSystemView: View {
                 snapshot.providers[index].isDefault = snapshot.providers[index].id == provider.id
             }
             selectedProviderID = provider.id
-            manager.showToast(title: "已模拟设为默认", message: "\(provider.name) 已在 UI 中标记为默认", icon: "star.fill", accent: SetupPalette.emerald)
+            manager.showToast(title: "已预览设为默认", message: "\(provider.name) 已在当前页面标记为默认", icon: "star.fill", accent: SetupPalette.emerald)
             return
         }
         manager.applyDefaultProvider(providerKey: provider.id)
@@ -358,14 +346,14 @@ struct ModelSystemView: View {
         let originalCount = snapshot.providers.count
         snapshot.providers.removeAll { $0.id == provider.id && !$0.isDefault }
         if snapshot.providers.count == originalCount {
-            showMockToast(title: "默认供应商未删除", message: "Phase 1 保护默认 Provider，避免 mock 状态无当前模型", icon: "lock.fill", accent: SetupPalette.amber)
+            showMockToast(title: "默认供应商未删除", message: "默认 Provider 受保护，避免当前模型失效", icon: "lock.fill", accent: SetupPalette.amber)
             return
         }
 
         snapshot.models.removeAll { $0.providerID == provider.id }
         selectedProviderID = snapshot.providers.first(where: \.isDefault)?.id ?? snapshot.providers.first?.id ?? ""
         selectedModelID = snapshot.models.first(where: \.isCurrent)?.id ?? snapshot.models.first?.id ?? ""
-        showMockToast(title: "已模拟删除供应商", message: "\(provider.name) 已从当前 UI 状态移除，不影响真实配置", icon: "trash", accent: DesignTokens.error)
+        showMockToast(title: "已预览删除供应商", message: "\(provider.name) 已从当前页面移除，不影响本机配置", icon: "trash", accent: DesignTokens.error)
     }
 
     private func openProviderCreation() {
@@ -411,7 +399,7 @@ struct ModelSystemView: View {
         if AppRuntimeMode.uiPrototype {
             isDetecting = true
             markProvider(provider.id, status: .healthy, latencyMS: 120 + provider.id.count)
-            showMockToast(title: "已模拟测试连接", message: "\(provider.name) 连接正常，状态已更新", icon: "waveform.path.ecg", accent: SetupPalette.emerald)
+            showMockToast(title: "已预览测试连接", message: "\(provider.name) 连接正常，状态已更新", icon: "waveform.path.ecg", accent: SetupPalette.emerald)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                 self.isDetecting = false
             }
@@ -500,7 +488,7 @@ struct ModelSystemView: View {
                 item.syncToCLI = true
                 item.lastCheckedAt = currentTimeLabel()
             }
-            manager.showToast(title: "已模拟同步 CLI", message: "\(provider.name) 的 CLI 同步状态已点亮", icon: "arrow.down.to.line", accent: SetupPalette.cyan)
+            manager.showToast(title: "已预览同步 CLI", message: "\(provider.name) 的 CLI 同步状态已点亮", icon: "arrow.down.to.line", accent: SetupPalette.cyan)
         } else {
             manager.syncProviderConfiguration(providerKey: provider.id)
         }
@@ -512,7 +500,7 @@ struct ModelSystemView: View {
                 item.syncToWebUI = true
                 item.lastCheckedAt = currentTimeLabel()
             }
-            manager.showToast(title: "已模拟同步 Web UI", message: "\(provider.name) 的 Web UI 同步状态已点亮", icon: "shippingbox", accent: SetupPalette.cyan)
+            manager.showToast(title: "已预览同步 Web UI", message: "\(provider.name) 的 Web UI 同步状态已点亮", icon: "shippingbox", accent: SetupPalette.cyan)
         } else {
             manager.syncProviderConfiguration(providerKey: provider.id)
         }
@@ -559,7 +547,7 @@ struct ModelSystemView: View {
                 snapshot.providers[index].syncToCLI = draft.syncToCLI
                 snapshot.providers[index].syncToWebUI = draft.syncToWebUI
             }
-            showMockToast(title: "已模拟保存供应商", message: "\(draft.providerLabel.ifEmpty(providerID)) 的改动只保存在当前 UI 状态", icon: "checkmark.seal.fill", accent: SetupPalette.emerald)
+            showMockToast(title: "已预览保存供应商", message: "\(draft.providerLabel.ifEmpty(providerID)) 的改动只保存在当前页面", icon: "checkmark.seal.fill", accent: SetupPalette.emerald)
             return
         }
         manager.saveModelProviderDraft(draft)
@@ -596,7 +584,7 @@ struct ModelSystemView: View {
             snapshot.providers[index].modelCount += 1
         }
         selectedModelID = model.id
-        showMockToast(title: "已模拟新增模型", message: "\(model.name) 已加入当前 UI 状态", icon: "plus.circle.fill", accent: SetupPalette.emerald)
+        showMockToast(title: "已预览新增模型", message: "\(model.name) 已加入当前页面", icon: "plus.circle.fill", accent: SetupPalette.emerald)
     }
 
     private func toggleMockModel(_ model: ModelInfoItem) {
@@ -614,8 +602,8 @@ struct ModelSystemView: View {
         }
         selectedModelID = model.id
         showMockToast(
-            title: snapshot.models[index].enabled ? "已模拟启用模型" : "已模拟停用模型",
-            message: "\(model.name) 的状态只在当前 UI 中变化",
+            title: snapshot.models[index].enabled ? "已预览启用模型" : "已预览停用模型",
+            message: "\(model.name) 的状态只在当前页面变化",
             icon: snapshot.models[index].enabled ? "play.circle.fill" : "pause.circle.fill",
             accent: snapshot.models[index].enabled ? SetupPalette.emerald : SetupPalette.amber
         )
@@ -644,7 +632,7 @@ struct ModelSystemView: View {
         )
         snapshot.providers.insert(provider, at: 0)
         selectedProviderID = provider.id
-        manager.showToast(title: "已创建空白供应商", message: "Phase 1 mock：右侧编辑面板可预览配置", icon: "plus.circle.fill", accent: SetupPalette.cyan)
+        manager.showToast(title: "已创建空白供应商", message: "右侧编辑面板可预览配置", icon: "plus.circle.fill", accent: SetupPalette.cyan)
     }
 
     private func showMockToast(title: String, message: String, icon: String, accent: Color) {
@@ -698,7 +686,7 @@ struct ModelSystemView: View {
                 )
             }
             selectedProviderID = draft.providerKey
-            showMockToast(title: "已模拟导入配置", message: "\(draft.providerLabel) 已加入 UI 状态", icon: "square.and.arrow.down", accent: SetupPalette.cyan)
+            showMockToast(title: "已预览导入配置", message: "\(draft.providerLabel) 已加入当前页面", icon: "square.and.arrow.down", accent: SetupPalette.cyan)
             return
         }
         manager.saveModelProviderDraft(draft)
@@ -734,7 +722,7 @@ struct ModelSystemView: View {
             selectedModelID = snapshot.models.first { $0.providerID == providerID && $0.name == (preferredModel ?? "") }?.id
                 ?? snapshot.models.first { $0.providerID == providerID && models.contains($0.name) }?.id
                 ?? selectedModelID
-            showMockToast(title: "已模拟更新可见模型", message: "当前 Provider 保留 \(models.count) 个可见模型", icon: "rectangle.on.rectangle", accent: SetupPalette.cyan)
+            showMockToast(title: "已预览更新可见模型", message: "当前 Provider 保留 \(models.count) 个可见模型", icon: "rectangle.on.rectangle", accent: SetupPalette.cyan)
             return
         }
 
@@ -789,7 +777,7 @@ struct ModelSystemView: View {
             if let providerIndex = snapshot.providers.firstIndex(where: { $0.id == context.provider.id }) {
                 snapshot.providers[providerIndex].modelCount = modelsForProvider(context.provider.id).count
             }
-            showMockToast(title: "已模拟保存模型", message: cleanName, icon: "checkmark.seal.fill", accent: SetupPalette.emerald)
+            showMockToast(title: "已预览保存模型", message: cleanName, icon: "checkmark.seal.fill", accent: SetupPalette.emerald)
             return
         }
 

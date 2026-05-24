@@ -30,8 +30,17 @@ enum DesignTokens {
 }
 
 enum AppRuntimeMode {
+    static var documentationScreenshot: Bool {
+        let value = ProcessInfo.processInfo.environment["HERMES_MANAGER_DOC_SCREENSHOT"]?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased()
+        guard let value, !value.isEmpty else { return false }
+        return !["0", "false", "no", "live"].contains(value)
+    }
+
     static var uiPrototype: Bool {
-        let value = ProcessInfo.processInfo.environment["HERMES_MANAGER_UI_PROTOTYPE"]?
+        let environment = ProcessInfo.processInfo.environment
+        let value = (environment["HERMES_MANAGER_SAFE_PREVIEW"] ?? environment["HERMES_MANAGER_UI_PROTOTYPE"])?
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .lowercased()
         guard let value, !value.isEmpty else { return false }
@@ -84,15 +93,15 @@ enum L10n {
             "未检测": "Not detected",
             "待选择组件": "select components",
             "未检测到 Hermes 当前模型": "Hermes current model not detected",
-            "UI 原型模式：不会自动启动服务": "UI prototype mode: services will not auto-start",
-            "UI 原型模式：已模拟启动 Web UI": "UI prototype mode: simulated starting Web UI",
-            "UI 原型模式：已模拟停止 Web UI": "UI prototype mode: simulated stopping Web UI",
-            "UI 原型模式：已模拟启动 Gateway": "UI prototype mode: simulated starting Gateway",
-            "UI 原型模式：已模拟停止 Gateway": "UI prototype mode: simulated stopping Gateway",
-            "UI 原型模式：已模拟启动所有服务": "UI prototype mode: simulated starting all services",
-            "UI 原型模式：已模拟停止所有服务": "UI prototype mode: simulated stopping all services",
-            "UI 原型模式：已模拟重启所有服务": "UI prototype mode: simulated restarting all services",
-            "UI 原型模式：不会打开浏览器": "UI prototype mode: browser opening is simulated",
+            "安全预览：不会自动启动服务": "Safe preview: services will not auto-start",
+            "安全预览：已预览启动 Web UI": "Safe preview: Web UI start previewed",
+            "安全预览：已预览停止 Web UI": "Safe preview: Web UI stop previewed",
+            "安全预览：已预览启动 Gateway": "Safe preview: Gateway start previewed",
+            "安全预览：已预览停止 Gateway": "Safe preview: Gateway stop previewed",
+            "安全预览：已预览启动所有服务": "Safe preview: starting all services previewed",
+            "安全预览：已预览停止所有服务": "Safe preview: stopping all services previewed",
+            "安全预览：已预览重启所有服务": "Safe preview: restarting all services previewed",
+            "安全预览：不会打开浏览器": "Safe preview: browser opening is skipped",
             "控制面板就绪，服务仅在用户点击后启动": "Dashboard ready; services start only after user action",
             "服务已就绪": "Services ready",
             "服务已自动启动": "Services auto-started",
@@ -112,14 +121,14 @@ enum L10n {
             "Gateway 启动失败": "Gateway failed to start",
             "Gateway 已停止": "Gateway stopped",
             "Gateway 停止失败": "Gateway failed to stop",
-            "已模拟启动 Web UI": "Simulated Web UI start",
-            "已模拟停止 Web UI": "Simulated Web UI stop",
-            "已模拟启动 Gateway": "Simulated Gateway start",
-            "已模拟停止 Gateway": "Simulated Gateway stop",
-            "已模拟启动全部": "Simulated Start All",
-            "已模拟停止全部": "Simulated Stop All",
-            "已模拟重启全部": "Simulated Restart All",
-            "已模拟打开 Web UI": "Simulated opening Web UI",
+            "已预览启动 Web UI": "Web UI start previewed",
+            "已预览停止 Web UI": "Web UI stop previewed",
+            "已预览启动 Gateway": "Gateway start previewed",
+            "已预览停止 Gateway": "Gateway stop previewed",
+            "已预览启动全部": "Start all previewed",
+            "已预览停止全部": "Stop all previewed",
+            "已预览重启全部": "Restart all previewed",
+            "已预览打开 Web UI": "Opening Web UI previewed",
             "已启动全部服务": "All services started",
             "已停止全部服务": "All services stopped",
             "已重启全部服务": "All services restarted",
@@ -132,9 +141,9 @@ enum L10n {
             "Hermes 主控链路已关闭": "Hermes brain bridge is closed",
             "Web UI 和 Gateway 均已运行": "Web UI and Gateway are both running",
             "Web UI 和 Gateway 均未运行，请查看日志": "Web UI and Gateway are both stopped; check logs",
-            "UI 原型模式不会启动真实服务": "UI prototype mode will not start real services",
-            "UI 原型模式不会停止真实服务": "UI prototype mode will not stop real services",
-            "UI 原型模式不会修改真实进程": "UI prototype mode will not modify real processes",
+            "安全预览不会启动真实服务": "Safe preview will not start real services",
+            "安全预览不会停止真实服务": "Safe preview will not stop real services",
+            "安全预览不会修改真实进程": "Safe preview will not modify real processes",
             "Web UI + Gateway 已进入预览状态": "Web UI + Gateway entered preview state",
             "Web UI + Gateway 已重新进入预览状态": "Web UI + Gateway re-entered preview state",
             "OpenHuman 已作为 Hermes 长期记忆库": "OpenHuman is the Hermes long-term memory store",
@@ -152,7 +161,7 @@ enum L10n {
             "Web UI 已读取，CLI 当前模型未检测到": "Web UI was read; CLI current model was not detected",
             "需要同步：CLI 当前模型不在 Web UI 可用清单": "Needs sync: CLI current model is not in the Web UI available list",
             "Web UI API 未响应，已回退读取 CLI 配置": "Web UI API did not respond; fell back to CLI config",
-            "UI 模式：正在模拟检测": "UI mode: simulating check",
+            "安全预览：正在检测": "Safe preview: checking",
             "没有检测到可测试模型": "No testable model detected",
             "没有可检测模型": "No detectable model",
         ]
@@ -163,8 +172,8 @@ enum L10n {
         if let suffix = value.removingPrefix("记忆连接未完成：") {
             return "Memory bridge incomplete: \(dynamic(suffix))"
         }
-        if let suffix = value.removingPrefix("UI 模式：已模拟同步 ") {
-            return "UI mode: simulated sync \(suffix)"
+        if let suffix = value.removingPrefix("安全预览：已预览同步 ") {
+            return "Safe preview: synced \(suffix)"
         }
         if let suffix = value.removingPrefix("已校准：Web UI 与 CLI 都是 ") {
             return "Calibrated: Web UI and CLI both use \(suffix)"
@@ -180,8 +189,8 @@ enum L10n {
         if let suffix = value.removingPrefix("正在检测 ") {
             return "Checking \(suffix)"
         }
-        if let suffix = value.removingPrefix("UI 模式：") {
-            return "UI mode: \(dynamic(suffix))"
+        if let suffix = value.removingPrefix("安全预览：") {
+            return "Safe preview: \(dynamic(suffix))"
         }
         if let suffix = value.removingPrefix("部分服务未停止：仍在运行 ") {
             return "Some services did not stop: still running \(suffix)"
@@ -199,11 +208,11 @@ enum L10n {
             return "Copied \(suffix)"
         }
         if let suffix = value.removingPrefix("正式使用时会打开 ") {
-            return "In live mode, this opens \(suffix)"
+            return "When enabled, this opens \(suffix)"
         }
 
         return value
-            .replacingOccurrences(of: " 个目标模拟可用", with: " targets simulated available")
+            .replacingOccurrences(of: " 个目标预览可用", with: " preview targets available")
             .replacingOccurrences(of: " 个模型接口可用", with: " model endpoints available")
             .replacingOccurrences(of: "，请查看日志或重新启动", with: "; check logs or restart")
             .replacingOccurrences(of: "，请查看日志", with: "; check logs")
@@ -492,18 +501,50 @@ class ServiceManager: ObservableObject {
     }
 
     init() {
-        checkStatus()
-        readToken()
-        refreshModelStatus()
-        loadRemoteVersionManifest()
-        startMonitoring()
+        if AppRuntimeMode.documentationScreenshot {
+            applyDocumentationSnapshot()
+        } else {
+            checkStatus()
+            readToken()
+            refreshModelStatus()
+            loadRemoteVersionManifest()
+            startMonitoring()
+        }
+    }
+
+    private func applyDocumentationSnapshot() {
+        webUIRunning = true
+        gatewayRunning = true
+        openHumanMemoryLinked = true
+        migratedMemoryAvailable = true
+        memoryBridgeIssues = []
+        memoryBridgeWarnings = []
+        memoryBridgeSummary = "OpenHuman 已作为 Hermes 长期记忆库"
+        openHumanDocumentCount = 24
+        migratedMemoryDocumentCount = 8
+        legacyHermesMemoryCount = 0
+        statusMessage = "服务已就绪"
+        webUIToken = "hm_preview_token_hidden_for_docs"
+        webUITokenPath = "~/.hermes-web-ui/.token"
+        webUIDataDirectory = "~/.hermes-web-ui"
+        currentModelProvider = "OpenAI Compatible"
+        currentModelName = "未配置"
+        modelCalibrationSummary = "可在完成安装后配置模型"
+        modelCalibrationHealthy = true
+        detectedProviderCount = 0
+        detectedModelCount = 0
+        modelStatusUpdatedAt = "文档示例"
+        webUIURL = "http://localhost:8648"
+        remoteManifest = .bundled
+        remoteManifestSource = "内置离线清单"
+        remoteManifestStatus = "版本清单已就绪"
     }
 
     func loadRemoteVersionManifest(completion: (() -> Void)? = nil) {
         if AppRuntimeMode.uiPrototype {
             remoteManifest = RemoteVersionManifest.bundled
             remoteManifestSource = "内置离线清单"
-            remoteManifestStatus = "UI 模式：已使用内置离线清单"
+            remoteManifestStatus = "安全预览：已使用内置离线清单"
             completion?()
             return
         }
@@ -532,7 +573,7 @@ class ServiceManager: ObservableObject {
     func autoStart() {
         if AppRuntimeMode.uiPrototype {
             autoStartDone = true
-            statusMessage = "UI 原型模式：不会自动启动服务"
+            statusMessage = "安全预览：不会自动启动服务"
             return
         }
         if autoStartDone { return }
@@ -740,8 +781,8 @@ class ServiceManager: ObservableObject {
 
     func startWebUI() {
         if AppRuntimeMode.uiPrototype {
-            statusMessage = "UI 原型模式：已模拟启动 Web UI"
-            showToast(title: "已模拟启动 Web UI", message: "UI 原型模式不会启动真实服务", icon: "play.fill", accent: SetupPalette.emerald)
+            statusMessage = "安全预览：已预览启动 Web UI"
+            showToast(title: "已预览启动 Web UI", message: "安全预览不会启动本机服务", icon: "play.fill", accent: SetupPalette.emerald)
             return
         }
         isLoading = true
@@ -769,8 +810,8 @@ class ServiceManager: ObservableObject {
 
     func stopWebUI() {
         if AppRuntimeMode.uiPrototype {
-            statusMessage = "UI 原型模式：已模拟停止 Web UI"
-            showToast(title: "已模拟停止 Web UI", message: "UI 原型模式不会停止真实服务", icon: "stop.fill", accent: SetupPalette.amber)
+            statusMessage = "安全预览：已预览停止 Web UI"
+            showToast(title: "已预览停止 Web UI", message: "安全预览不会停止本机服务", icon: "stop.fill", accent: SetupPalette.amber)
             return
         }
         isLoading = true
@@ -798,8 +839,8 @@ class ServiceManager: ObservableObject {
 
     func startGateway() {
         if AppRuntimeMode.uiPrototype {
-            statusMessage = "UI 原型模式：已模拟启动 Gateway"
-            showToast(title: "已模拟启动 Gateway", message: "UI 原型模式不会启动真实服务", icon: "play.fill", accent: SetupPalette.emerald)
+            statusMessage = "安全预览：已预览启动 Gateway"
+            showToast(title: "已预览启动 Gateway", message: "安全预览不会启动本机服务", icon: "play.fill", accent: SetupPalette.emerald)
             return
         }
         isLoading = true
@@ -827,8 +868,8 @@ class ServiceManager: ObservableObject {
 
     func stopGateway() {
         if AppRuntimeMode.uiPrototype {
-            statusMessage = "UI 原型模式：已模拟停止 Gateway"
-            showToast(title: "已模拟停止 Gateway", message: "UI 原型模式不会停止真实服务", icon: "stop.fill", accent: SetupPalette.amber)
+            statusMessage = "安全预览：已预览停止 Gateway"
+            showToast(title: "已预览停止 Gateway", message: "安全预览不会停止本机服务", icon: "stop.fill", accent: SetupPalette.amber)
             return
         }
         isLoading = true
@@ -856,8 +897,8 @@ class ServiceManager: ObservableObject {
 
     func startAll(openBrowserIfWebUIRunning: Bool = false) {
         if AppRuntimeMode.uiPrototype {
-            statusMessage = "UI 原型模式：已模拟启动所有服务"
-            showToast(title: "已模拟启动全部", message: "Web UI + Gateway 已进入预览状态", icon: "bolt.fill", accent: SetupPalette.emerald)
+            statusMessage = "安全预览：已预览启动所有服务"
+            showToast(title: "已预览启动全部", message: "Web UI + Gateway 已进入预览状态", icon: "bolt.fill", accent: SetupPalette.emerald)
             return
         }
         isLoading = true
@@ -890,8 +931,8 @@ class ServiceManager: ObservableObject {
 
     func stopAll() {
         if AppRuntimeMode.uiPrototype {
-            statusMessage = "UI 原型模式：已模拟停止所有服务"
-            showToast(title: "已模拟停止全部", message: "UI 原型模式不会修改真实进程", icon: "pause.fill", accent: SetupPalette.amber)
+            statusMessage = "安全预览：已预览停止所有服务"
+            showToast(title: "已预览停止全部", message: "安全预览不会修改本机进程", icon: "pause.fill", accent: SetupPalette.amber)
             return
         }
         isLoading = true
@@ -923,8 +964,8 @@ class ServiceManager: ObservableObject {
 
     func restartAll() {
         if AppRuntimeMode.uiPrototype {
-            statusMessage = "UI 原型模式：已模拟重启所有服务"
-            showToast(title: "已模拟重启全部", message: "Web UI + Gateway 已重新进入预览状态", icon: "arrow.clockwise", accent: SetupPalette.cyan)
+            statusMessage = "安全预览：已预览重启所有服务"
+            showToast(title: "已预览重启全部", message: "Web UI + Gateway 已重新进入预览状态", icon: "arrow.clockwise", accent: SetupPalette.cyan)
             return
         }
         isLoading = true
@@ -957,7 +998,7 @@ class ServiceManager: ObservableObject {
 
     func updateHermes() {
         if AppRuntimeMode.uiPrototype {
-            statusMessage = "UI 原型模式：已模拟 Hermes 核心组件更新"
+            statusMessage = "安全预览：已预览 Hermes 核心组件更新"
             return
         }
         isLoading = true
@@ -979,7 +1020,7 @@ class ServiceManager: ObservableObject {
 
     func updateWebUI() {
         if AppRuntimeMode.uiPrototype {
-            statusMessage = "UI 原型模式：已模拟 Web UI 更新"
+            statusMessage = "安全预览：已预览 Web UI 更新"
             return
         }
         isLoading = true
@@ -1027,7 +1068,7 @@ class ServiceManager: ObservableObject {
 
     func updateCompatibilityBundle(completion: @escaping (Result<Void, Error>) -> Void) {
         if AppRuntimeMode.uiPrototype {
-            statusMessage = "UI 原型模式：已模拟 Hermes + OpenHuman 核心组件更新"
+            statusMessage = "安全预览：已预览 Hermes + OpenHuman 核心组件更新"
             completion(.success(()))
             return
         }
@@ -1097,8 +1138,8 @@ class ServiceManager: ObservableObject {
 
     func openWebUIInBrowser() {
         if AppRuntimeMode.uiPrototype {
-            statusMessage = "UI 原型模式：不会打开浏览器"
-            showToast(title: "已模拟打开 Web UI", message: "正式使用时会打开 \(webUIURL)", icon: "safari", accent: SetupPalette.cyan)
+            statusMessage = "安全预览：不会打开浏览器"
+            showToast(title: "已预览打开 Web UI", message: "正式使用时会打开 \(webUIURL)", icon: "safari", accent: SetupPalette.cyan)
             return
         }
         let detectedURL = detectWebUIURL()
@@ -1229,14 +1270,14 @@ class ServiceManager: ObservableObject {
             detectedProviderCount = max(detectedProviderCount, 1)
             detectedModelCount = max(detectedModelCount, configuration.models.count)
             modelCalibrationHealthy = true
-            modelCalibrationSummary = "UI 模式：已模拟同步 \(provider) / \(model)"
+            modelCalibrationSummary = "安全预览：已预览同步 \(provider) / \(model)"
             modelStatusUpdatedAt = currentTimeString()
             modelDetectionHistory.insert(
                 ModelDetectionRecord(
                     id: UUID(),
                     targetType: "provider",
                     title: "模型配置已更新",
-                    detail: "已模拟同步 \(displayProviderName(label: configuration.providerLabel, key: provider)) / \(model)",
+                    detail: "已预览同步 \(displayProviderName(label: configuration.providerLabel, key: provider)) / \(model)",
                     status: .warning,
                     latencyMS: nil,
                     availabilityPercent: nil,
@@ -1245,7 +1286,7 @@ class ServiceManager: ObservableObject {
                 at: 0
             )
             modelDetectionHistory = Array(modelDetectionHistory.prefix(36))
-            showToast(title: "UI 模式：已模拟添加", message: "不会写入 Hermes 或 Hermes Web UI 真实配置", icon: "paintbrush.fill", accent: SetupPalette.cyan)
+            showToast(title: "安全预览：已预览添加", message: "不会写入 Hermes 或 Hermes Web UI 本机配置", icon: "paintbrush.fill", accent: SetupPalette.cyan)
             return
         }
 
@@ -1316,7 +1357,7 @@ class ServiceManager: ObservableObject {
 
     func runCommand(_ command: String) -> String {
         if AppRuntimeMode.uiPrototype {
-            return "[UI 原型模式] skipped: \(command)"
+            return "[SAFE PREVIEW] skipped: \(command)"
         }
         return runShellCommand(command)
     }
@@ -1348,7 +1389,7 @@ class ServiceManager: ObservableObject {
 
     func runHermesCLI(_ commandLine: String) -> String {
         if AppRuntimeMode.uiPrototype {
-            return "[UI 原型模式] skipped: hermes \(commandLine)"
+            return "[SAFE PREVIEW] skipped: hermes \(commandLine)"
         }
         let arguments = shellLikeSplit(commandLine)
         guard !arguments.isEmpty else { return "" }
@@ -2754,7 +2795,7 @@ extension ServiceManager {
             currentModelName = configuration.defaultModel
             modelCalibrationHealthy = true
             modelStatusUpdatedAt = currentTimeString()
-            showToast(title: "UI 模式：已模拟更新可见模型", message: "\(providerDisplayName(for: normalized)) 保留 \(models.count) 个可见模型", icon: "paintbrush.fill", accent: SetupPalette.cyan)
+            showToast(title: "安全预览：已更新可见模型", message: "\(providerDisplayName(for: normalized)) 保留 \(models.count) 个可见模型", icon: "paintbrush.fill", accent: SetupPalette.cyan)
             return
         }
 
@@ -2818,7 +2859,7 @@ extension ServiceManager {
         )
 
         if AppRuntimeMode.uiPrototype {
-            showToast(title: "UI 模式：已模拟保存模型", message: "\(configuration.defaultModel) 已加入 \(providerDisplayName(for: normalized))", icon: "paintbrush.fill", accent: SetupPalette.cyan)
+            showToast(title: "安全预览：已保存模型", message: "\(configuration.defaultModel) 已加入 \(providerDisplayName(for: normalized))", icon: "paintbrush.fill", accent: SetupPalette.cyan)
             return
         }
 
@@ -2870,7 +2911,7 @@ extension ServiceManager {
 
     func removeCustomProvider(providerKey: String) {
         guard !AppRuntimeMode.uiPrototype else {
-            showToast(title: "UI 模式：已模拟删除", message: "当前不会触碰真实 Hermes/Web UI 配置", icon: "trash.fill", accent: DesignTokens.error)
+            showToast(title: "安全预览：已预览删除", message: "当前不会触碰 Hermes/Web UI 本机配置", icon: "trash.fill", accent: DesignTokens.error)
             return
         }
 
@@ -2956,7 +2997,7 @@ extension ServiceManager {
 
         isCheckingModelHealth = true
         modelHealthResults = []
-        modelHealthSummary = AppRuntimeMode.uiPrototype ? "UI 模式：正在模拟检测" : "正在检测 \(title)"
+        modelHealthSummary = AppRuntimeMode.uiPrototype ? "安全预览：正在检测" : "正在检测 \(title)"
 
         if AppRuntimeMode.uiPrototype {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
@@ -2965,7 +3006,7 @@ extension ServiceManager {
                     ?? self.currentModelProvider.ifEmpty("OpenCode Go")
                 let previewResults = targets.isEmpty
                     ? [
-                        ModelHealthResult(provider: previewProvider, model: previewModel, ok: true, latencyMS: 142, detail: "UI 模拟：/models 可用")
+                        ModelHealthResult(provider: previewProvider, model: previewModel, ok: true, latencyMS: 142, detail: "安全预览：/models 可用")
                     ]
                     : targets.prefix(4).enumerated().map { index, target in
                         ModelHealthResult(
@@ -2973,11 +3014,11 @@ extension ServiceManager {
                             model: target.model,
                             ok: true,
                             latencyMS: 142 + (index * 19),
-                            detail: "UI 模拟：/models 可用"
+                            detail: "安全预览：/models 可用"
                         )
                     }
                 self.modelHealthResults = previewResults
-                self.modelHealthSummary = "UI 模式：\(previewResults.count) 个目标模拟可用"
+                self.modelHealthSummary = "安全预览：\(previewResults.count) 个目标预览可用"
                 self.recordDetectionHistory(
                     title: title,
                     targetType: targetType,
@@ -2986,7 +3027,7 @@ extension ServiceManager {
                     results: previewResults
                 )
                 self.isCheckingModelHealth = false
-                self.showToast(title: "模型检测完成", message: "UI 模式仅展示交互，不消耗真实 API", icon: "waveform.path.ecg", accent: SetupPalette.cyan)
+                self.showToast(title: "模型检测完成", message: "安全预览仅展示交互，不消耗真实 API", icon: "waveform.path.ecg", accent: SetupPalette.cyan)
                 completion?()
             }
             return
@@ -3547,7 +3588,7 @@ struct ContentView: View {
 
     var body: some View {
         Group {
-            if !setupCompleted || showSetupWizard {
+            if AppRuntimeMode.documentationScreenshot || !setupCompleted || showSetupWizard {
                 SetupWizardView(manager: manager) {
                     setupCompleted = true
                     showSetupWizard = false
@@ -3751,14 +3792,6 @@ struct SidebarView: View {
                         .font(.system(size: 9, weight: .bold, design: .monospaced))
                         .foregroundColor(DesignTokens.textMuted)
                         .tracking(1.1)
-                    if AppRuntimeMode.uiPrototype {
-                        HStack(spacing: 6) {
-                            Circle().fill(SetupPalette.cyan).frame(width: 6, height: 6)
-                            Text(L10n.t("UI 原型", "UI Prototype"))
-                                .font(.system(size: 11, weight: .bold, design: .monospaced))
-                                .foregroundColor(SetupPalette.cyan)
-                        }
-                    }
                 }
             }
             .padding(.horizontal, 18)
@@ -4290,9 +4323,6 @@ struct ConsoleHeader: View {
                     ConsoleStatusChip(title: "Web UI", isOn: manager.webUIRunning)
                     ConsoleStatusChip(title: "Gateway", isOn: manager.gatewayRunning)
                     ConsoleStatusChip(title: L10n.t("OpenHuman 记忆", "OpenHuman Memory"), isOn: manager.openHumanMemoryLinked)
-                    if AppRuntimeMode.uiPrototype {
-                        ConsoleStatusChip(title: L10n.t("UI 原型", "UI Prototype"), isOn: true)
-                    }
                 }
                 .frame(maxWidth: 520, alignment: .leading)
             }
@@ -4992,9 +5022,6 @@ struct DashboardHeroPanel: View {
                     SetupHealthChip(title: L10n.t("Hermes 主控", "Hermes Brain"), isOn: manager.gatewayRunning)
                     SetupHealthChip(title: "Web UI", isOn: manager.webUIRunning)
                     SetupHealthChip(title: L10n.t("OpenHuman 记忆", "OpenHuman Memory"), isOn: manager.openHumanMemoryLinked)
-                    if AppRuntimeMode.uiPrototype {
-                        SetupHealthChip(title: L10n.t("UI 原型模式", "UI Prototype"), isOn: true)
-                    }
                 }
             }
 
@@ -5892,29 +5919,27 @@ struct SettingsView: View {
     private var settingsSidebarFooter: some View {
         HStack(alignment: .center, spacing: 10) {
             Circle()
-                .fill(AppRuntimeMode.uiPrototype ? SetupPalette.cyan : SetupPalette.emerald)
+                .fill(SetupPalette.emerald)
                 .frame(width: 7, height: 7)
 
-            Text(AppRuntimeMode.uiPrototype ? text("UI 原型", "UI Prototype") : manager.appVersion)
+            Text(manager.appVersion)
                 .font(.system(size: 12, weight: .bold, design: .monospaced))
-                .foregroundColor(AppRuntimeMode.uiPrototype ? SetupPalette.cyan : SetupPalette.emerald)
+                .foregroundColor(SetupPalette.emerald)
 
             Spacer()
 
-            if !AppRuntimeMode.uiPrototype {
-                Button {
-                    if let url = URL(string: "https://github.com/Averionx/HermesManager") {
-                        NSWorkspace.shared.open(url)
-                    }
-                } label: {
-                    GitHubMarkIcon(color: SetupPalette.emerald)
-                        .frame(width: 25, height: 25)
-                        .frame(width: 30, height: 30)
-                        .contentShape(Rectangle())
+            Button {
+                if let url = URL(string: "https://github.com/Averionx/HermesManager") {
+                    NSWorkspace.shared.open(url)
                 }
-                .buttonStyle(.plain)
-                .help(text("打开 GitHub 仓库", "Open GitHub repository"))
+            } label: {
+                GitHubMarkIcon(color: SetupPalette.emerald)
+                    .frame(width: 25, height: 25)
+                    .frame(width: 30, height: 30)
+                    .contentShape(Rectangle())
             }
+            .buttonStyle(.plain)
+            .help(text("打开 GitHub 仓库", "Open GitHub repository"))
         }
         .padding(.horizontal, 8)
         .padding(.bottom, 2)
@@ -6163,7 +6188,7 @@ struct SettingsView: View {
             SettingsLightNotice(
                 title: text("安全说明", "Safety"),
                 detail: AppRuntimeMode.uiPrototype
-                    ? text("当前 UI 模式下，检测和更新都会模拟，不会安装或修改你的 Hermes/OpenHuman。", "In UI preview, checks and updates are simulated and will not modify Hermes/OpenHuman.")
+                    ? text("当前为安全预览，检测和更新不会安装或修改你的 Hermes/OpenHuman。", "Safe preview is active, so checks and updates will not install or modify Hermes/OpenHuman.")
                     : text("Web UI 更新会执行 hermes-web-ui update；核心组件只包含 Hermes 和 OpenHuman。", "Web UI runs hermes-web-ui update; core components only include Hermes and OpenHuman."),
                 isPositive: true
             )
@@ -6245,7 +6270,7 @@ struct SettingsView: View {
             hasUpdate = AppRuntimeMode.uiPrototype || needsHermes || needsOpenHuman
             if hasUpdate {
                 message = AppRuntimeMode.uiPrototype
-                    ? text("测试模式：模拟发现一个开发者验证核心组件更新，可点击更新查看安装流程。", "Test mode: a developer-tested core component update is simulated so you can preview the install flow.")
+                    ? text("安全预览：已发现一个开发者验证核心组件更新，可点击更新查看安装流程。", "Safe preview: a developer-tested core component update is available so you can preview the install flow.")
                     : text("检测到开发者验证的核心组件版本，可点击更新。", "Developer-tested core component versions are available.")
             } else {
                 message = text("Hermes 和 OpenHuman 当前已经是目标版本。", "Hermes and OpenHuman are already on the target versions.")
@@ -6341,7 +6366,7 @@ enum UpdateTarget: String, Identifiable {
 
     func installingMessage(isEnglish: Bool, prototype: Bool) -> String {
         if prototype {
-            return isEnglish ? "Simulating the update. No real install will run." : "正在模拟更新，不会执行真实安装。"
+            return isEnglish ? "Previewing the update. No local install will run." : "正在预览更新，不会执行本机安装。"
         }
         switch self {
         case .app:
@@ -6373,7 +6398,7 @@ struct UpdateDialogState: Identifiable {
         var next = self
         next.phase = .completed
         next.message = prototype
-            ? (isEnglish ? "Simulation complete. No real files were changed." : "模拟完成，没有修改真实文件。")
+            ? (isEnglish ? "Preview complete. No local files were changed." : "预览完成，没有修改本机文件。")
             : (isEnglish ? "Update flow finished. Check logs for exact command output." : "更新流程已完成，请查看日志确认命令输出。")
         return next
     }
@@ -7729,7 +7754,7 @@ struct AddModelProviderSheet: View {
     private var footerNote: some View {
         SettingsStatusNote(
             icon: AppRuntimeMode.uiPrototype ? "paintbrush.fill" : "checkmark.shield.fill",
-            text: AppRuntimeMode.uiPrototype ? "当前是 UI 模式：点击添加只会模拟同步，不会写入你的真实 Hermes/Web UI。" : "保存后会同步 Hermes CLI、Hermes Web UI config.json 和 Web UI 模型数据库；不会打印 API Key。",
+            text: AppRuntimeMode.uiPrototype ? "当前为安全预览：点击添加只会预览同步，不会写入你的 Hermes/Web UI 本机配置。" : "保存后会同步 Hermes CLI、Hermes Web UI config.json 和 Web UI 模型数据库；不会打印 API Key。",
             accent: AppRuntimeMode.uiPrototype ? SetupPalette.cyan : SetupPalette.emerald
         )
     }
@@ -7776,7 +7801,7 @@ struct AddModelProviderSheet: View {
 
     private func fetchModels() {
         isFetching = true
-        fetchMessage = AppRuntimeMode.uiPrototype ? "UI 模式：正在模拟拉取 /models..." : "正在请求 /models..."
+        fetchMessage = AppRuntimeMode.uiPrototype ? "安全预览：正在读取 /models..." : "正在请求 /models..."
         fetchedModels = []
         ModelCatalogService.fetchOpenAICompatibleModels(baseURL: baseURL, apiKey: apiKey) { result in
             DispatchQueue.main.async {
@@ -8197,7 +8222,7 @@ struct QuickActionsView: View {
                                 ) {
                                     let configPath = manager.activeHermesConfigPath
                                     if AppRuntimeMode.uiPrototype {
-                                        manager.showToast(title: L10n.t("UI 模式", "UI Mode"), message: L10n.t("已模拟打开配置文件：\(compactPath(configPath))", "Simulated opening config file: \(compactPath(configPath))"), icon: "doc.text", accent: SetupPalette.cyan)
+                                        manager.showToast(title: L10n.t("安全预览", "Safe Preview"), message: L10n.t("已预览打开配置文件：\(compactPath(configPath))", "Opening config file previewed: \(compactPath(configPath))"), icon: "doc.text", accent: SetupPalette.cyan)
                                         return
                                     }
                                     NSWorkspace.shared.open(URL(fileURLWithPath: configPath))
@@ -8211,7 +8236,7 @@ struct QuickActionsView: View {
                                 ) {
                                     let hermesPath = manager.activeHermesProfileHome
                                     if AppRuntimeMode.uiPrototype {
-                                        manager.showToast(title: L10n.t("UI 模式", "UI Mode"), message: L10n.t("已模拟打开数据目录：\(compactPath(hermesPath))", "Simulated opening data folder: \(compactPath(hermesPath))"), icon: "folder", accent: SetupPalette.cyan)
+                                        manager.showToast(title: L10n.t("安全预览", "Safe Preview"), message: L10n.t("已预览打开数据目录：\(compactPath(hermesPath))", "Opening data folder previewed: \(compactPath(hermesPath))"), icon: "folder", accent: SetupPalette.cyan)
                                         return
                                     }
                                     NSWorkspace.shared.open(URL(fileURLWithPath: hermesPath))

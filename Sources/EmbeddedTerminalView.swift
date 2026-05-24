@@ -9,7 +9,7 @@ struct EmbeddedTerminalView: View {
     @State private var terminalTitle = "terminal"
 
     private var terminalModeLabel: String {
-        AppRuntimeMode.uiPrototype ? L10n.t("真实 Hermes CLI / UI 模式", "Real Hermes CLI / UI Mode") : L10n.t("真实 Hermes CLI", "Real Hermes CLI")
+        L10n.t("Hermes CLI", "Hermes CLI")
     }
 
     var body: some View {
@@ -58,7 +58,7 @@ struct EmbeddedTerminalView: View {
                     .foregroundColor(DesignTokens.textPrimary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.82)
-                Text(AppRuntimeMode.uiPrototype ? L10n.t("UI 模式下内置 CLI 也按真实 Terminal 启动 Hermes；安装/修复流程仍然只是模拟。", "In UI mode, the embedded CLI starts Hermes like a real Terminal; install/repair flows are still simulated.") : L10n.t("这里是应用内真实 PTY 终端，直接运行 Hermes CLI，不再用假输入框模拟。", "This is a real in-app PTY terminal running Hermes CLI directly, not a fake input box."))
+                Text(L10n.t("这里是应用内 PTY 终端，直接运行 Hermes CLI，不需要另开系统终端。", "This in-app PTY terminal runs Hermes CLI directly, so you do not need to open a separate system Terminal."))
                     .font(.system(size: 13, weight: .medium))
                     .foregroundColor(DesignTokens.textTertiary)
                     .lineLimit(2)
