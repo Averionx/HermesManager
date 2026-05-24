@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/hero-banner.png" alt="Hermes Manager" width="900">
+  <img src="docs/assets/hero-banner.png" alt="Hermes Manager" width="640">
 </p>
 
 <p align="center">
@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="README.md">中文</a> |
-  <a href="README.en.md">English</a>
+  English
 </p>
 
 <p align="center">
@@ -37,7 +37,7 @@ Hermes Manager combines them:
 - Migration only moves Hermes long-term memory; short-term logs stay local.
 
 <p align="center">
-  <img src="docs/assets/architecture.png" alt="Hermes Manager architecture" width="900">
+  <img src="docs/assets/architecture-en.png" alt="Hermes Manager architecture" width="900">
 </p>
 
 ## Highlights
@@ -55,16 +55,16 @@ Hermes Manager combines them:
 
 ## Screenshots
 
-### Setup and repair flow
+### Fresh Install Flow
 
 <p align="center">
-  <img src="docs/assets/app-setup-flow.png" alt="Setup flow" width="900">
+  <img src="docs/assets/setup-fresh-choose-en.png" alt="Hermes Manager fresh install screen" width="900">
 </p>
 
-### Language switch
+### Install and Configure
 
 <p align="center">
-  <img src="docs/assets/language-switch.png" alt="Language switch" width="420">
+  <img src="docs/assets/setup-fresh-running-en.png" alt="Hermes Manager install progress screen" width="900">
 </p>
 
 ## Quick Start
@@ -83,7 +83,6 @@ If macOS says the app is damaged or cannot be opened, see [Troubleshooting](docs
 - [Installation Guide](docs/INSTALL.en.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.en.md)
 - [Development Guide](docs/DEVELOPMENT.en.md)
-- [中文 README](README.md)
 
 ## Current Status
 

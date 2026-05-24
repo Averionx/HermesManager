@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/hero-banner.png" alt="Hermes Manager" width="900">
+  <img src="docs/assets/hero-banner.png" alt="Hermes Manager" width="640">
 </p>
 
 <p align="center">
@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="README.md">中文</a> |
+  中文 |
   <a href="README.en.md">English</a>
 </p>
 
@@ -37,7 +37,7 @@ Hermes Manager 把两者接在一起：
 - 迁移时只迁移 Hermes 长期记忆，短期会话日志保留在本地。
 
 <p align="center">
-  <img src="docs/assets/architecture.png" alt="Hermes Manager architecture" width="900">
+  <img src="docs/assets/architecture-zh.png" alt="Hermes Manager 架构" width="900">
 </p>
 
 ## 功能亮点
@@ -55,16 +55,16 @@ Hermes Manager 把两者接在一起：
 
 ## 截图
 
-### 安装与修复流程
+### 全新安装流程
 
 <p align="center">
-  <img src="docs/assets/app-setup-flow.png" alt="Setup flow" width="900">
+  <img src="docs/assets/setup-fresh-choose-zh.png" alt="Hermes Manager 全新安装界面" width="900">
 </p>
 
-### 语言切换
+### 安装与配置
 
 <p align="center">
-  <img src="docs/assets/language-switch.png" alt="Language switch" width="420">
+  <img src="docs/assets/setup-fresh-running-zh.png" alt="Hermes Manager 安装执行页面" width="900">
 </p>
 
 ## 快速开始
@@ -83,7 +83,6 @@ Hermes Manager 把两者接在一起：
 - [安装指南](docs/INSTALL.zh-CN.md)
 - [常见问题排查](docs/TROUBLESHOOTING.zh-CN.md)
 - [开发指南](docs/DEVELOPMENT.zh-CN.md)
-- [English README](README.en.md)
 
 ## 当前状态
 

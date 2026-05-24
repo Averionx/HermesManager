@@ -18,34 +18,52 @@
 
 If macOS blocks the app, see [Troubleshooting](TROUBLESHOOTING.en.md).
 
-## First Launch
+## First Launch: Fresh Install Flow
 
-Hermes Manager automatically detects the local machine state and enables only the matching card:
+Hermes Manager automatically detects the local machine state and enables only the matching card. A clean machine enters the fresh install flow: Hermes, OpenHuman, and Hermes Web UI are installed with developer-tested versions and connected automatically.
 
 - Fresh install: Hermes, OpenHuman, and Hermes Web UI are missing.
 - Add OpenHuman: Hermes exists, OpenHuman should be installed, and Hermes long-term memory should be migrated.
 - Repair memory bridge: Hermes and OpenHuman exist but are not connected correctly.
 - Already configured: Hermes brain, OpenHuman memory, and Web UI console are ready.
 
+### 1. Choose Fresh Install
+
+Confirm that “Fresh Install” is highlighted, then click “Start One-click Install”.
+
 <p align="center">
-  <img src="assets/app-setup-flow.png" alt="Setup flow" width="900">
+  <img src="assets/setup-fresh-choose-en.png" alt="Fresh install entry" width="900">
 </p>
 
-## Memory Migration Strategy
+### 2. Wait for Install and Bridge Setup
+
+The run page shows logs and progress. This stage installs Hermes, OpenHuman, Hermes Web UI, then writes the Hermes -> OpenHuman memory bridge config.
+
+<p align="center">
+  <img src="assets/setup-fresh-running-en.png" alt="Install progress screen" width="900">
+</p>
+
+### 3. Optional: Configure Model API
+
+After setup, enter an OpenAI-compatible API base URL, API key, and model name if you already have one. You can also skip this step. OpenHuman does not need a model API; it acts as the long-term memory backend.
+
+<p align="center">
+  <img src="assets/setup-fresh-api-en.png" alt="API configuration screen" width="900">
+</p>
+
+### 4. Enter the Completion Page
+
+The completion page shows the Web UI URL, login token, and model status. The token should stay hidden by default until the user chooses to copy it.
+
+<p align="center">
+  <img src="assets/setup-fresh-summary-en.png" alt="Setup completion page" width="900">
+</p>
+
+## Memory Strategy
 
 Hermes Manager migrates Hermes long-term memory only. Short-term conversations, logs, caches, and temporary state remain local.
 
 Migration writes into OpenHuman's local memory workspace and uses deduplication to avoid overwriting existing OpenHuman memory.
-
-## API Configuration
-
-After setup, you may configure an OpenAI-compatible model:
-
-- API Base URL
-- API Key
-- Model name
-
-You can skip this step. OpenHuman does not need a model API; it acts as the long-term memory backend.
 
 ## Runtime Behavior
 
